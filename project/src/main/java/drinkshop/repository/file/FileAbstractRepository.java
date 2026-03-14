@@ -1,15 +1,19 @@
 package drinkshop.repository.file;
 
-import drinkshop.repository.AbstractRepository;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
-import java.io.*;
+import drinkshop.repository.AbstractRepository;
 
 public abstract class FileAbstractRepository<ID, E>
         extends AbstractRepository<ID, E> {
 
     protected String fileName;
 
-    public FileAbstractRepository(String fileName) {
+    protected FileAbstractRepository(String fileName) {
         this.fileName = fileName;
         //loadFromFile();
     }

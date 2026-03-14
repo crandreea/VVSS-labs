@@ -17,14 +17,20 @@ public abstract class AbstractRepository<ID, E>
 
     @Override
     public List<E> findAll() {
-        return (List<E>)StreamSupport.stream(entities.values().spliterator(), false).toList();
+        return StreamSupport.stream(entities.values().spliterator(), false).toList();
 //                    .collect(Collectors.toList());
         // return (List<E>) entities.values();
     }
 
     @Override
     public E save(E entity) {
-        entities.put(getId(entity), entity);
+        // ----- adaugat 
+        ID id = getId(entity);
+        if (entities.containsKey(id)) {
+            throw new IllegalArgumentException("Entitatea cu ID-ul " + id + " există deja!");
+        }
+        // ------------------
+        entities.put(id, entity);
         return entity;
     }
 
@@ -35,7 +41,13 @@ public abstract class AbstractRepository<ID, E>
 
     @Override
     public E update(E entity) {
-        entities.put(getId(entity), entity);
+        // ----- adaugat 
+        ID id = getId(entity);
+        if (!entities.containsKey(id)) {
+            throw new IllegalArgumentException("Entitatea cu ID-ul " + id + " nu există și nu poate fi actualizată!");
+        }
+        // ---------------
+        entities.put(id, entity);
         return entity;
     }
 
