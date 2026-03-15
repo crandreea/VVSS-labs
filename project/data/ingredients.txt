@@ -1,0 +1,12 @@
+1;cafea_macinata;g
+2;apa;ml
+3;lapte;ml
+4;lapte_ovaz;ml
+5;matcha_pudra;g
+6;taro_pudra;g
+7;tapioca;g
+8;ceai_verde;g
+9;lamaie;g
+10;zahar;g
+11;selectedProd;buc
+12;lime;g

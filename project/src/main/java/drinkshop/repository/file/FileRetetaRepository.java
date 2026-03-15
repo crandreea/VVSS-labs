@@ -2,6 +2,8 @@ package drinkshop.repository.file;
 
 import drinkshop.domain.IngredientReteta;
 import drinkshop.domain.Reteta;
+import drinkshop.domain.Ingredient;
+import drinkshop.repository.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +12,11 @@ import java.util.stream.Collectors;
 public class FileRetetaRepository
         extends FileAbstractRepository<Integer, Reteta> {
 
-    public FileRetetaRepository(String fileName) {
+    private Repository<Long, Ingredient> ingredientRepo;
+
+    public FileRetetaRepository(String fileName, Repository<Long, Ingredient> ingredientRepo) {
         super(fileName);
+        this.ingredientRepo = ingredientRepo;
         loadFromFile();
     }
 
@@ -31,9 +36,12 @@ public class FileRetetaRepository
         while (index<elems.length) {
             String ingredientTotal= elems[index++];
             String[] ingredientSeparat = ingredientTotal.split(":");
-            String ingredientName = ingredientSeparat[0];
+            Long ingredientId = Long.parseLong(ingredientSeparat[0]);
             Double ingredientQuantity = Double.parseDouble(ingredientSeparat[1]);
-            ingrediente.add(new IngredientReteta(ingredientName, ingredientQuantity));
+            
+            Ingredient ing = ingredientRepo.findOne(ingredientId);
+            
+            ingrediente.add(new IngredientReteta(ing, ingredientQuantity));
         }
         return new Reteta(productId, ingrediente);
     }
@@ -41,7 +49,7 @@ public class FileRetetaRepository
     @Override
     protected String createEntityAsString(Reteta entity) {
         String ingrediente = entity.getIngrediente().stream()
-                        .map(entry -> entry.getDenumire() + ":" + entry.getCantitate())
+                        .map(entry -> entry.getIngredient().getId() + ":" + entry.getCantitate())
                         .collect(Collectors.joining(","));
         return entity.getId() + "," +
                 ingrediente;

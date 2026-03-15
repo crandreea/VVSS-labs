@@ -2,6 +2,7 @@ package drinkshop.export;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -27,7 +28,7 @@ public class CsvExporter {
             String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
             w.write("TOTAL OF "+date+" is: "+sum+" RON\n");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException("Eroare la exportul comenzilor in CSV", e);
         }
     }
 }

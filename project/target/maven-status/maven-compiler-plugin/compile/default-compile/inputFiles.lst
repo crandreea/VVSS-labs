@@ -1,4 +1,5 @@
 /Users/croitoruandreea/Desktop/VVSS-labs/project/src/main/java/drinkshop/domain/CategorieBautura.java
+/Users/croitoruandreea/Desktop/VVSS-labs/project/src/main/java/drinkshop/domain/Ingredient.java
 /Users/croitoruandreea/Desktop/VVSS-labs/project/src/main/java/drinkshop/domain/IngredientReteta.java
 /Users/croitoruandreea/Desktop/VVSS-labs/project/src/main/java/drinkshop/domain/Order.java
 /Users/croitoruandreea/Desktop/VVSS-labs/project/src/main/java/drinkshop/domain/OrderItem.java
@@ -12,10 +13,13 @@
 /Users/croitoruandreea/Desktop/VVSS-labs/project/src/main/java/drinkshop/repository/AbstractRepository.java
 /Users/croitoruandreea/Desktop/VVSS-labs/project/src/main/java/drinkshop/repository/Repository.java
 /Users/croitoruandreea/Desktop/VVSS-labs/project/src/main/java/drinkshop/repository/file/FileAbstractRepository.java
+/Users/croitoruandreea/Desktop/VVSS-labs/project/src/main/java/drinkshop/repository/file/FileCategorieRepository.java
+/Users/croitoruandreea/Desktop/VVSS-labs/project/src/main/java/drinkshop/repository/file/FileIngredientRepository.java
 /Users/croitoruandreea/Desktop/VVSS-labs/project/src/main/java/drinkshop/repository/file/FileOrderRepository.java
 /Users/croitoruandreea/Desktop/VVSS-labs/project/src/main/java/drinkshop/repository/file/FileProductRepository.java
 /Users/croitoruandreea/Desktop/VVSS-labs/project/src/main/java/drinkshop/repository/file/FileRetetaRepository.java
 /Users/croitoruandreea/Desktop/VVSS-labs/project/src/main/java/drinkshop/repository/file/FileStocRepository.java
+/Users/croitoruandreea/Desktop/VVSS-labs/project/src/main/java/drinkshop/repository/file/FileTipBauturaRepository.java
 /Users/croitoruandreea/Desktop/VVSS-labs/project/src/main/java/drinkshop/service/DrinkShopService.java
 /Users/croitoruandreea/Desktop/VVSS-labs/project/src/main/java/drinkshop/service/OrderService.java
 /Users/croitoruandreea/Desktop/VVSS-labs/project/src/main/java/drinkshop/service/ProductService.java
