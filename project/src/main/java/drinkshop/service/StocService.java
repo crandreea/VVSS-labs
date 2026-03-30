@@ -1,12 +1,11 @@
 package drinkshop.service;
 
+import java.util.List;
+
 import drinkshop.domain.IngredientReteta;
 import drinkshop.domain.Reteta;
 import drinkshop.domain.Stoc;
 import drinkshop.repository.Repository;
-
-import java.util.List;
-import java.util.Map;
 
 public class StocService {
 
@@ -36,11 +35,11 @@ public class StocService {
         List<IngredientReteta> ingredienteNecesare = reteta.getIngrediente();
 
         for (IngredientReteta e : ingredienteNecesare) {
-            String ingredient = e.getDenumire();
+            String ingredient = e.getIngredient().getNume();
             double necesar = e.getCantitate();
 
             double disponibil = stocRepo.findAll().stream()
-                    .filter(s -> s.getIngredient().equalsIgnoreCase(ingredient))
+                    .filter(s -> s.getIngredient().getNume().equalsIgnoreCase(ingredient))
                     .mapToDouble(Stoc::getCantitate)
                     .sum();
 
@@ -57,11 +56,11 @@ public class StocService {
         }
 
         for (IngredientReteta e : reteta.getIngrediente()) {
-            String ingredient = e.getDenumire();
+            String ingredient = e.getIngredient().getNume();
             double necesar = e.getCantitate();
 
             List<Stoc> ingredienteStoc = stocRepo.findAll().stream()
-                    .filter(s -> s.getIngredient().equalsIgnoreCase(ingredient))
+                    .filter(s -> s.getIngredient().getNume().equalsIgnoreCase(ingredient))
                     .toList();
 
             double ramas = necesar;
@@ -70,7 +69,7 @@ public class StocService {
                 if (ramas <= 0) break;
 
                 double deScazut = Math.min(s.getCantitate(), ramas);
-                s.setCantitate((int)(s.getCantitate() - deScazut));
+                s.setCantitate((s.getCantitate() - deScazut));
                 ramas -= deScazut;
 
                 stocRepo.update(s);

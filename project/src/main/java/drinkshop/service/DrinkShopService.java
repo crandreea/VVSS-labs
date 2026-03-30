@@ -16,17 +16,24 @@ public class DrinkShopService {
     private final StocService stocService;
     private final DailyReportService report;
 
+    private final Repository<Integer, CategorieBautura> categorieRepo;
+    private final Repository<Integer, TipBautura> tipRepo;
+
     public DrinkShopService(
             Repository<Integer, Product> productRepo,
             Repository<Integer, Order> orderRepo,
             Repository<Integer, Reteta> retetaRepo,
-            Repository<Integer, Stoc> stocService
+            Repository<Integer, Stoc> stocService,
+            Repository<Integer, CategorieBautura> categorieRepo,
+            Repository<Integer, TipBautura> tipRepo
     ) {
         this.productService = new ProductService(productRepo);
         this.orderService = new OrderService(orderRepo, productRepo);
         this.retetaService = new RetetaService(retetaRepo);
         this.stocService = new StocService(stocService);
         this.report = new DailyReportService(orderRepo);
+        this.categorieRepo = categorieRepo;
+        this.tipRepo = tipRepo;
     }
 
     // ---------- PRODUCT ----------
@@ -103,5 +110,39 @@ public class DrinkShopService {
 
     public void deleteReteta(int id) {
         retetaService.deleteReteta(id);
+    }
+
+    // ---------- CATEGORIE ----------
+    public List<CategorieBautura> getAllCategorii() {
+        return categorieRepo.findAll();
+    }
+
+    public void addCategorie(CategorieBautura cb) {
+        categorieRepo.save(cb);
+    }
+
+    public void updateCategorie(CategorieBautura cb) {
+        categorieRepo.update(cb);
+    }
+
+    public void deleteCategorie(int id) {
+        categorieRepo.delete(id);
+    }
+
+    // ---------- TIP ----------
+    public List<TipBautura> getAllTipuri() {
+        return tipRepo.findAll();
+    }
+
+    public void addTip(TipBautura tb) {
+        tipRepo.save(tb);
+    }
+
+    public void updateTip(TipBautura tb) {
+        tipRepo.update(tb);
+    }
+
+    public void deleteTip(int id) {
+        tipRepo.delete(id);
     }
 }

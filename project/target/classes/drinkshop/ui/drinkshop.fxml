@@ -135,6 +135,50 @@
                 <Label fx:id="lblTotalRevenue" text="Daily Revenue: 0"/>
             </HBox>
 
+            <Separator/>
+            
+            <!-- NOMENCLATOARE (CATEGORII & TIPURI) -->
+            <Label text="Gestiune Categorii si Tipuri Bautura" style="-fx-font-weight: bold;"/>
+            <HBox spacing="20">
+                <!-- CATEGORII -->
+                <VBox>
+                    <Label text="Categorii"/>
+                    <TableView fx:id="categorieTable" prefHeight="150" prefWidth="250">
+                        <columns>
+                            <TableColumn fx:id="colCategorieId" text="ID" prefWidth="50"/>
+                            <TableColumn fx:id="colCategorieName" text="Nume Categorie" prefWidth="180"/>
+                        </columns>
+                    </TableView>
+                    <HBox>
+                        <TextField fx:id="txtCategorieName" promptText="Nume Categorie" prefWidth="120"/>
+                    </HBox>
+                    <HBox>
+                        <Button text="Add" onAction="#onAddCategorie"/>
+                        <Button text="Update" onAction="#onUpdateCategorie"/>
+                        <Button text="Delete" onAction="#onDeleteCategorie"/>
+                    </HBox>
+                </VBox>
+
+                <!-- TIPURI -->
+                <VBox>
+                    <Label text="Tipuri de Bautura"/>
+                    <TableView fx:id="tipTable" prefHeight="150" prefWidth="250">
+                        <columns>
+                            <TableColumn fx:id="colTipId" text="ID" prefWidth="50"/>
+                            <TableColumn fx:id="colTipName" text="Nume Tip" prefWidth="180"/>
+                        </columns>
+                    </TableView>
+                    <HBox>
+                        <TextField fx:id="txtTipName" promptText="Nume Tip" prefWidth="120"/>
+                    </HBox>
+                    <HBox>
+                        <Button text="Add" onAction="#onAddTip"/>
+                        <Button text="Update" onAction="#onUpdateTip"/>
+                        <Button text="Delete" onAction="#onDeleteTip"/>
+                    </HBox>
+                </VBox>
+            </HBox>
+
         </VBox>
     </center>
 </BorderPane>

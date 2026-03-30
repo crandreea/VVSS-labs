@@ -4,21 +4,21 @@ import java.util.List;
 
 public class Reteta {
 
-    private int id;
+    private int productId;
     private List<IngredientReteta> ingrediente;
 
-    public Reteta(int id, List<IngredientReteta> ingrediente) {
-        this.id = id;
+    public Reteta(int productId, List<IngredientReteta> ingrediente) {
+        this.productId = productId;
         this.ingrediente = ingrediente;
 
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.productId = id;
     }
 
     public int getId() {
-        return id;
+        return productId;
     }
 
 
@@ -33,7 +33,7 @@ public class Reteta {
     @Override
     public String toString() {
         return "Reteta{" +
-                "productId=" + id +
+                "productId=" + productId +
                 ", ingrediente=" + ingrediente +
                 '}';
     }

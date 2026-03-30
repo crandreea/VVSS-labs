@@ -48,10 +48,23 @@ public class DrinkShopController {
 
     @FXML private Label lblTotalRevenue;
 
+    // ---------- CATEGORII & TIPURI ----------
+    @FXML private TableView<CategorieBautura> categorieTable;
+    @FXML private TableColumn<CategorieBautura, Integer> colCategorieId;
+    @FXML private TableColumn<CategorieBautura, String> colCategorieName;
+    @FXML private TextField txtCategorieName;
+
+    @FXML private TableView<TipBautura> tipTable;
+    @FXML private TableColumn<TipBautura, Integer> colTipId;
+    @FXML private TableColumn<TipBautura, String> colTipName;
+    @FXML private TextField txtTipName;
+
     private ObservableList<Product> productList = FXCollections.observableArrayList();
     private ObservableList<Reteta> retetaList = FXCollections.observableArrayList();
     private ObservableList<IngredientReteta> newRetetaList = FXCollections.observableArrayList();
     private ObservableList<OrderItem> currentOrderItems = FXCollections.observableArrayList();
+    private ObservableList<CategorieBautura> categorieList = FXCollections.observableArrayList();
+    private ObservableList<TipBautura> tipList = FXCollections.observableArrayList();
 
     private Order currentOrder = new Order(1);
 
@@ -71,21 +84,18 @@ public class DrinkShopController {
         colProdTip.setCellValueFactory(new PropertyValueFactory<>("tip"));
         productTable.setItems(productList);
 
-        comboProdCategorie.getItems().setAll(CategorieBautura.values());
-        comboProdTip.getItems().setAll(TipBautura.values());
-
         // RETETE
         colRetetaId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colRetetaDesc.setCellValueFactory(data -> {
             Reteta r = data.getValue();
             String desc = r.getIngrediente().stream()
-                    .map(i -> i.getDenumire() + " (" + i.getCantitate() + ")")
+                    .map(i -> i.getIngredient().getNume() + " (" + i.getCantitate() + ")")
                     .collect(Collectors.joining(", "));
             return new SimpleStringProperty(desc);
         });
         retetaTable.setItems(retetaList);
 
-        colNewIngredName.setCellValueFactory(new PropertyValueFactory<>("denumire"));
+        colNewIngredName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getIngredient().getNume()));
         colNewIngredCant.setCellValueFactory(new PropertyValueFactory<>("cantitate"));
         newRetetaTable.setItems(newRetetaList);
 
@@ -99,11 +109,25 @@ public class DrinkShopController {
         currentOrderTable.setItems(currentOrderItems);
 
         comboQty.setItems(FXCollections.observableArrayList(1,2,3,4,5,6,7,8,9,10));
+
+        // CATEGORII
+        colCategorieId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colCategorieName.setCellValueFactory(new PropertyValueFactory<>("nume"));
+        categorieTable.setItems(categorieList);
+
+        // TIPURI
+        colTipId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colTipName.setCellValueFactory(new PropertyValueFactory<>("nume"));
+        tipTable.setItems(tipList);
     }
 
     private void initData() {
         productList.setAll(service.getAllProducts());
         retetaList.setAll(service.getAllRetete());
+        categorieList.setAll(service.getAllCategorii());
+        tipList.setAll(service.getAllTipuri());
+        comboProdCategorie.getItems().setAll(categorieList);
+        comboProdTip.getItems().setAll(tipList);
         lblTotalRevenue.setText("Daily Revenue: " + service.getDailyRevenue());
         updateOrderTotal();
     }
@@ -167,7 +191,7 @@ public class DrinkShopController {
     // ---------- RETETA NOUA ----------
     @FXML
     private void onAddNewIngred() {
-        newRetetaList.add(new IngredientReteta(txtNewIngredName.getText(),
+        newRetetaList.add(new IngredientReteta(new drinkshop.domain.Ingredient((long) (Math.random() * 10000), txtNewIngredName.getText(), "buc"),
                 Double.parseDouble(txtNewIngredCant.getText())));
     }
 
@@ -250,6 +274,64 @@ public class DrinkShopController {
     @FXML
     private void onDailyRevenue() {
         lblTotalRevenue.setText("Daily Revenue: " + service.getDailyRevenue());
+    }
+
+    // ---------- CATEGORII ----------
+    @FXML
+    private void onAddCategorie() {
+        if (txtCategorieName.getText().isEmpty()) return;
+        int nextId = categorieList.stream().mapToInt(CategorieBautura::getId).max().orElse(0) + 1;
+        CategorieBautura cat = new CategorieBautura(nextId, txtCategorieName.getText());
+        service.addCategorie(cat);
+        initData();
+        txtCategorieName.clear();
+    }
+
+    @FXML
+    private void onUpdateCategorie() {
+        CategorieBautura sel = categorieTable.getSelectionModel().getSelectedItem();
+        if (sel == null || txtCategorieName.getText().isEmpty()) return;
+        sel.setNume(txtCategorieName.getText());
+        service.updateCategorie(sel);
+        initData();
+        txtCategorieName.clear();
+    }
+
+    @FXML
+    private void onDeleteCategorie() {
+        CategorieBautura sel = categorieTable.getSelectionModel().getSelectedItem();
+        if (sel == null) return;
+        service.deleteCategorie(sel.getId());
+        initData();
+    }
+
+    // ---------- TIPURI BAUTURA ----------
+    @FXML
+    private void onAddTip() {
+        if (txtTipName.getText().isEmpty()) return;
+        int nextId = tipList.stream().mapToInt(TipBautura::getId).max().orElse(0) + 1;
+        TipBautura tip = new TipBautura(nextId, txtTipName.getText());
+        service.addTip(tip);
+        initData();
+        txtTipName.clear();
+    }
+
+    @FXML
+    private void onUpdateTip() {
+        TipBautura sel = tipTable.getSelectionModel().getSelectedItem();
+        if (sel == null || txtTipName.getText().isEmpty()) return;
+        sel.setNume(txtTipName.getText());
+        service.updateTip(sel);
+        initData();
+        txtTipName.clear();
+    }
+
+    @FXML
+    private void onDeleteTip() {
+        TipBautura sel = tipTable.getSelectionModel().getSelectedItem();
+        if (sel == null) return;
+        service.deleteTip(sel.getId());
+        initData();
     }
 
     private void showError(String msg) {
