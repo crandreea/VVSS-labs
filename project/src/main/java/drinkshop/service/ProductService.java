@@ -19,6 +19,28 @@ public class ProductService {
     }
 
     public void updateProduct(int id, String name, double price, CategorieBautura categorie, TipBautura tip) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Date invalide");
+        }
+
+        if (name == null) {
+            throw new IllegalArgumentException("Date invalide");
+        }
+
+        if (name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Date invalide");
+        }
+
+        if (price <= 0) {
+            throw new IllegalArgumentException("Date invalide");
+        }
+
+        for (Product p : getAllProducts()) {
+            if (p.getId() != id && p.getNume().equalsIgnoreCase(name)) {
+                throw new IllegalArgumentException("Produs duplicat");
+            }
+        }
+
         Product updated = new Product(id, name, price, categorie, tip);
         productRepo.update(updated);
     }
@@ -28,13 +50,13 @@ public class ProductService {
     }
 
     public List<Product> getAllProducts() {
-//        Iterable<Product> it=productRepo.findAll();
-//        ArrayList<Product> products=new ArrayList<>();
-//        it.forEach(products::add);
-//        return products;
+        // Iterable<Product> it=productRepo.findAll();
+        // ArrayList<Product> products=new ArrayList<>();
+        // it.forEach(products::add);
+        // return products;
 
-//        return StreamSupport.stream(productRepo.findAll().spliterator(), false)
-//                    .collect(Collectors.toList());
+        // return StreamSupport.stream(productRepo.findAll().spliterator(), false)
+        // .collect(Collectors.toList());
         return productRepo.findAll();
     }
 
@@ -43,14 +65,16 @@ public class ProductService {
     }
 
     public List<Product> filterByCategorie(CategorieBautura categorie) {
-        if (categorie == null || "ALL".equals(categorie.getNume())) return getAllProducts();
+        if (categorie == null || "ALL".equals(categorie.getNume()))
+            return getAllProducts();
         return getAllProducts().stream()
                 .filter(p -> p.getCategorie().equals(categorie))
                 .collect(Collectors.toList());
     }
 
     public List<Product> filterByTip(TipBautura tip) {
-        if (tip == null || "ALL".equals(tip.getNume())) return getAllProducts();
+        if (tip == null || "ALL".equals(tip.getNume()))
+            return getAllProducts();
         return getAllProducts().stream()
                 .filter(p -> p.getTip().equals(tip))
                 .collect(Collectors.toList());

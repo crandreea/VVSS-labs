@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="drinkshop.service.ProductServiceTest" time="0.032" tests="8" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="drinkshop.service.ProductServiceTest" time="0.042" tests="16" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -12,10 +12,10 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="RO"/>
     <property name="sun.boot.library.path" value="/opt/homebrew/Cellar/openjdk/25.0.2/libexec/openjdk.jdk/Contents/Home/lib"/>
-    <property name="sun.java.command" value="org.apache.maven.surefire.booter.ForkedBooter /Users/croitoruandreea/Desktop/VVSS-labs/project/target/surefire 2026-03-30T22-03-34_964-jvmRun1 surefire-20260330220335070_1tmp surefire_0-20260330220335070_2tmp"/>
+    <property name="sun.java.command" value="org.apache.maven.surefire.booter.ForkedBooter /Users/croitoruandreea/Desktop/VVSS-labs/project/target/surefire 2026-04-19T21-10-47_281-jvmRun1 surefire-20260419211047394_1tmp surefire_0-20260419211047394_2tmp"/>
     <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="jdk.debug" value="release"/>
-    <property name="test" value="drinkshop.service.ProductServiceTest"/>
+    <property name="test" value="ProductServiceTest"/>
     <property name="surefire.test.class.path" value="/Users/croitoruandreea/Desktop/VVSS-labs/project/target/test-classes:/Users/croitoruandreea/.m2/repository/org/openjfx/javafx-controls/22.0.1/javafx-controls-22.0.1.jar:/Users/croitoruandreea/.m2/repository/org/junit/jupiter/junit-jupiter/5.10.0/junit-jupiter-5.10.0.jar:/Users/croitoruandreea/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.10.0/junit-jupiter-api-5.10.0.jar:/Users/croitoruandreea/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/croitoruandreea/.m2/repository/org/junit/platform/junit-platform-commons/1.10.0/junit-platform-commons-1.10.0.jar:/Users/croitoruandreea/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/croitoruandreea/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.10.0/junit-jupiter-params-5.10.0.jar:/Users/croitoruandreea/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.10.0/junit-jupiter-engine-5.10.0.jar:/Users/croitoruandreea/.m2/repository/org/junit/platform/junit-platform-engine/1.10.0/junit-platform-engine-1.10.0.jar:/Users/croitoruandreea/.m2/repository/org/openjfx/javafx-base/22.0.1/javafx-base-22.0.1.jar:/Users/croitoruandreea/.m2/repository/org/openjfx/javafx-graphics/22.0.1/javafx-graphics-22.0.1.jar:/Users/croitoruandreea/.m2/repository/org/openjfx/javafx-fxml/22.0.1/javafx-fxml-22.0.1.jar:/Users/croitoruandreea/.m2/repository/org/openjfx/javafx-web/11.0.2/javafx-web-11.0.2.jar:/Users/croitoruandreea/.m2/repository/org/openjfx/javafx-swing/11.0.2/javafx-swing-11.0.2.jar:/Users/croitoruandreea/.m2/repository/org/openjfx/javafx-media/11.0.2/javafx-media-11.0.2.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="/Users/croitoruandreea"/>
@@ -61,12 +61,20 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.class.version" value="69.0"/>
   </properties>
-  <testcase name="testAddProductValid_TC1_ECP" classname="drinkshop.service.ProductServiceTest" time="0.012"/>
+  <testcase name="testAddProductValid_TC1_ECP" classname="drinkshop.service.ProductServiceTest" time="0.013"/>
   <testcase name="testAddProductIdInvalid_TC2_ECP" classname="drinkshop.service.ProductServiceTest" time="0.001"/>
-  <testcase name="testAddProductNameEmpty_TC3_ECP" classname="drinkshop.service.ProductServiceTest" time="0.001"/>
-  <testcase name="testAddProductPriceInvalid_TC4_ECP" classname="drinkshop.service.ProductServiceTest" time="0.0"/>
-  <testcase name="testAddProductValidIdLimit_TC1_BVA" classname="drinkshop.service.ProductServiceTest" time="0.001"/>
+  <testcase name="testAddProductNameEmpty_TC3_ECP" classname="drinkshop.service.ProductServiceTest" time="0.0"/>
+  <testcase name="testAddProductPriceInvalid_TC4_ECP" classname="drinkshop.service.ProductServiceTest" time="0.001"/>
+  <testcase name="testAddProductValidIdLimit_TC1_BVA" classname="drinkshop.service.ProductServiceTest" time="0.0"/>
   <testcase name="testAddProductInvalidIdLimit_TC2_BVA" classname="drinkshop.service.ProductServiceTest" time="0.001"/>
   <testcase name="testAddProductValidPriceLimit_TC3_BVA" classname="drinkshop.service.ProductServiceTest" time="0.001"/>
   <testcase name="testAddProductInvalidPriceLimit_TC4_BVA" classname="drinkshop.service.ProductServiceTest" time="0.001"/>
+  <testcase name="testUpdateProduct_P1_IdInvalid" classname="drinkshop.service.ProductServiceTest" time="0.001"/>
+  <testcase name="testUpdateProduct_P2_NameNull" classname="drinkshop.service.ProductServiceTest" time="0.001"/>
+  <testcase name="testUpdateProduct_P3_NameBlank" classname="drinkshop.service.ProductServiceTest" time="0.001"/>
+  <testcase name="testUpdateProduct_P4_PriceInvalid" classname="drinkshop.service.ProductServiceTest" time="0.001"/>
+  <testcase name="testUpdateProduct_P5_BypassLoop" classname="drinkshop.service.ProductServiceTest" time="0.002"/>
+  <testcase name="testUpdateProduct_P6_Loop_IdMatch" classname="drinkshop.service.ProductServiceTest" time="0.001"/>
+  <testcase name="testUpdateProduct_P7_Loop_IdMismatch_NameMismatch" classname="drinkshop.service.ProductServiceTest" time="0.001"/>
+  <testcase name="testUpdateProduct_P8_Loop_IdMismatch_NameMatch" classname="drinkshop.service.ProductServiceTest" time="0.001"/>
 </testsuite>

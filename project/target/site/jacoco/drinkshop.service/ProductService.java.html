@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MyDrinkShop</a> &gt; <a href="index.source.html" class="el_package">drinkshop.service</a> &gt; <span class="el_source">ProductService.java</span></div><h1>ProductService.java</h1><pre class="source lang-java linenums">package drinkshop.service;
+
+import drinkshop.domain.*;
+import drinkshop.repository.Repository;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class ProductService {
+
+    private final Repository&lt;Integer, Product&gt; productRepo;
+
+<span class="fc" id="L13">    public ProductService(Repository&lt;Integer, Product&gt; productRepo) {</span>
+<span class="fc" id="L14">        this.productRepo = productRepo;</span>
+<span class="fc" id="L15">    }</span>
+
+    public void addProduct(Product p) {
+<span class="fc" id="L18">        productRepo.save(p);</span>
+<span class="fc" id="L19">    }</span>
+
+    public void updateProduct(int id, String name, double price, CategorieBautura categorie, TipBautura tip) {
+<span class="fc bfc" id="L22" title="All 2 branches covered.">        if (id &lt;= 0) {</span>
+<span class="fc" id="L23">            throw new IllegalArgumentException(&quot;Date invalide&quot;);</span>
+        }
+
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        if (name == null) {</span>
+<span class="fc" id="L27">            throw new IllegalArgumentException(&quot;Date invalide&quot;);</span>
+        }
+
+<span class="fc bfc" id="L30" title="All 2 branches covered.">        if (name.trim().isEmpty()) {</span>
+<span class="fc" id="L31">            throw new IllegalArgumentException(&quot;Date invalide&quot;);</span>
+        }
+
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        if (price &lt;= 0) {</span>
+<span class="fc" id="L35">            throw new IllegalArgumentException(&quot;Date invalide&quot;);</span>
+        }
+
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        for (Product p : getAllProducts()) {</span>
+<span class="fc bfc" id="L39" title="All 4 branches covered.">            if (p.getId() != id &amp;&amp; p.getNume().equalsIgnoreCase(name)) {</span>
+<span class="fc" id="L40">                throw new IllegalArgumentException(&quot;Produs duplicat&quot;);</span>
+            }
+<span class="fc" id="L42">        }</span>
+
+<span class="fc" id="L44">        Product updated = new Product(id, name, price, categorie, tip);</span>
+<span class="fc" id="L45">        productRepo.update(updated);</span>
+<span class="fc" id="L46">    }</span>
+
+    public void deleteProduct(int id) {
+<span class="nc" id="L49">        productRepo.delete(id);</span>
+<span class="nc" id="L50">    }</span>
+
+    public List&lt;Product&gt; getAllProducts() {
+        // Iterable&lt;Product&gt; it=productRepo.findAll();
+        // ArrayList&lt;Product&gt; products=new ArrayList&lt;&gt;();
+        // it.forEach(products::add);
+        // return products;
+
+        // return StreamSupport.stream(productRepo.findAll().spliterator(), false)
+        // .collect(Collectors.toList());
+<span class="fc" id="L60">        return productRepo.findAll();</span>
+    }
+
+    public Product findById(int id) {
+<span class="fc" id="L64">        return productRepo.findOne(id);</span>
+    }
+
+    public List&lt;Product&gt; filterByCategorie(CategorieBautura categorie) {
+<span class="nc bnc" id="L68" title="All 4 branches missed.">        if (categorie == null || &quot;ALL&quot;.equals(categorie.getNume()))</span>
+<span class="nc" id="L69">            return getAllProducts();</span>
+<span class="nc" id="L70">        return getAllProducts().stream()</span>
+<span class="nc" id="L71">                .filter(p -&gt; p.getCategorie().equals(categorie))</span>
+<span class="nc" id="L72">                .collect(Collectors.toList());</span>
+    }
+
+    public List&lt;Product&gt; filterByTip(TipBautura tip) {
+<span class="nc bnc" id="L76" title="All 4 branches missed.">        if (tip == null || &quot;ALL&quot;.equals(tip.getNume()))</span>
+<span class="nc" id="L77">            return getAllProducts();</span>
+<span class="nc" id="L78">        return getAllProducts().stream()</span>
+<span class="nc" id="L79">                .filter(p -&gt; p.getTip().equals(tip))</span>
+<span class="nc" id="L80">                .collect(Collectors.toList());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

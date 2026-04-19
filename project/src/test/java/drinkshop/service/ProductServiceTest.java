@@ -177,4 +177,106 @@ public class ProductServiceTest {
 
         assertTrue(exception.getMessage().contains("Pret invalid!"));
     }
+
+    // ---------------------------------------------------------
+    // Teste WBT (White-Box Testing) pentru metoda updateProduct
+    // ---------------------------------------------------------
+
+    @Test
+    @Tag("WBT")
+    @Order(10)
+    @DisplayName("P1: updateProduct - ID invalid (<= 0)")
+    void testUpdateProduct_P1_IdInvalid() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            productService.updateProduct(0, "Cola", 5.0, categorieDummy, tipDummy);
+        });
+        assertEquals("Date invalide", exception.getMessage());
+    }
+
+    @Test
+    @Tag("WBT")
+    @Order(11)
+    @DisplayName("P2: updateProduct - Nume null")
+    void testUpdateProduct_P2_NameNull() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            productService.updateProduct(1, null, 5.0, categorieDummy, tipDummy);
+        });
+        assertEquals("Date invalide", exception.getMessage());
+    }
+
+    @Test
+    @Tag("WBT")
+    @Order(12)
+    @DisplayName("P3: updateProduct - Nume empty/blank")
+    void testUpdateProduct_P3_NameBlank() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            productService.updateProduct(1, "   ", 5.0, categorieDummy, tipDummy);
+        });
+        assertEquals("Date invalide", exception.getMessage());
+    }
+
+    @Test
+    @Tag("WBT")
+    @Order(13)
+    @DisplayName("P4: updateProduct - Preț invalid (<= 0)")
+    void testUpdateProduct_P4_PriceInvalid() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            productService.updateProduct(1, "Cola", -1.0, categorieDummy, tipDummy);
+        });
+        assertEquals("Date invalide", exception.getMessage());
+    }
+
+    @Test
+    @Tag("WBT")
+    @Order(14)
+    @DisplayName("P5: updateProduct - Bypass loop, array gol (Se aruncă din repository)")
+    void testUpdateProduct_P5_BypassLoop() {
+        // Repository implicit gol (fără produse adăugate)
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            productService.updateProduct(1, "Cola", 5.0, categorieDummy, tipDummy);
+        });
+        // CFG node 10 este apelul productRepo.update care eșuează pentru ID neexistent
+        assertTrue(exception.getMessage().contains("nu există și nu poate fi actualizată!"));
+    }
+
+    @Test
+    @Tag("WBT")
+    @Order(15)
+    @DisplayName("P6: updateProduct - 1 Iterație, ID match, se actualizează cu succes")
+    void testUpdateProduct_P6_Loop_IdMatch() {
+        Product initial = new Product(10, "Fanta", 6.0, categorieDummy, tipDummy);
+        productService.addProduct(initial);
+
+        productService.updateProduct(10, "Fanta Noua", 6.5, categorieDummy, tipDummy);
+
+        assertEquals("Fanta Noua", productService.findById(10).getNume());
+        assertEquals(6.5, productService.findById(10).getPret());
+    }
+
+    @Test
+    @Tag("WBT")
+    @Order(16)
+    @DisplayName("P7: updateProduct - Iterație cu ID mismatch și Nume mismatch")
+    void testUpdateProduct_P7_Loop_IdMismatch_NameMismatch() {
+        productService.addProduct(new Product(20, "Sprite", 5.0, categorieDummy, tipDummy));
+        productService.addProduct(new Product(21, "7UP", 5.0, categorieDummy, tipDummy));
+
+        productService.updateProduct(21, "7UP Nou", 5.5, categorieDummy, tipDummy);
+
+        assertEquals("7UP Nou", productService.findById(21).getNume());
+    }
+
+    @Test
+    @Tag("WBT")
+    @Order(17)
+    @DisplayName("P8: updateProduct - Iterație ID mismatch, dar Nume match -> Throw Produs duplicat")
+    void testUpdateProduct_P8_Loop_IdMismatch_NameMatch() {
+        productService.addProduct(new Product(30, "Pepsi", 6.0, categorieDummy, tipDummy));
+        productService.addProduct(new Product(31, "Mirinda", 5.0, categorieDummy, tipDummy));
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            productService.updateProduct(31, "Pepsi", 5.5, categorieDummy, tipDummy);
+        });
+        assertEquals("Produs duplicat", exception.getMessage());
+    }
 }
