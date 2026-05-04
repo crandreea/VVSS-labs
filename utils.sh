@@ -1,0 +1,1 @@
+mvn test -Dtest=ProductServiceUnitTesting,ProductServiceIntegrationTesting -Dnet.bytebuddy.experimental=true

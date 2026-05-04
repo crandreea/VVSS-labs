@@ -35,8 +35,8 @@ public class ProductServiceTest {
                 return entity.getId();
             }
         };
-        productService = new ProductService(mockRepo);
         validator = new ProductValidator();
+        productService = new ProductService(mockRepo, validator);
 
         categorieDummy = new CategorieBautura(1, "TEA");
         tipDummy = new TipBautura(1, "BASIC");
