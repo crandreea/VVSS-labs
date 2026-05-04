@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DrinkShopController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MyDrinkShop</a> &gt; <a href="index.source.html" class="el_package">drinkshop.ui</a> &gt; <span class="el_source">DrinkShopController.java</span></div><h1>DrinkShopController.java</h1><pre class="source lang-java linenums">package drinkshop.ui;
+
+import drinkshop.domain.*;
+import drinkshop.service.DrinkShopService;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
+<span class="nc" id="L15">public class DrinkShopController {</span>
+
+    private DrinkShopService service;
+
+    // ---------- PRODUCT ----------
+    @FXML private TableView&lt;Product&gt; productTable;
+    @FXML private TableColumn&lt;Product, Integer&gt; colProdId;
+    @FXML private TableColumn&lt;Product, String&gt; colProdName;
+    @FXML private TableColumn&lt;Product, Double&gt; colProdPrice;
+    @FXML private TableColumn&lt;Product, CategorieBautura&gt; colProdCategorie;
+    @FXML private TableColumn&lt;Product, TipBautura&gt; colProdTip;
+    @FXML private TextField txtProdName, txtProdPrice;
+    @FXML private ComboBox&lt;CategorieBautura&gt; comboProdCategorie;
+    @FXML private ComboBox&lt;TipBautura&gt; comboProdTip;
+
+    // ---------- RETETE ----------
+    @FXML private TableView&lt;Reteta&gt; retetaTable;
+    @FXML private TableColumn&lt;Reteta, Integer&gt; colRetetaId;
+    @FXML private TableColumn&lt;Reteta, String&gt; colRetetaDesc;
+
+    @FXML private TableView&lt;IngredientReteta&gt; newRetetaTable;
+    @FXML private TableColumn&lt;IngredientReteta, String&gt; colNewIngredName;
+    @FXML private TableColumn&lt;IngredientReteta, Double&gt; colNewIngredCant;
+    @FXML private TextField txtNewIngredName, txtNewIngredCant;
+
+    // ---------- ORDER (CURRENT) ----------
+    @FXML private TableView&lt;OrderItem&gt; currentOrderTable;
+    @FXML private TableColumn&lt;OrderItem, String&gt; colOrderProdName;
+    @FXML private TableColumn&lt;OrderItem, Integer&gt; colOrderQty;
+
+    @FXML private ComboBox&lt;Integer&gt; comboQty;
+    @FXML private Label lblOrderTotal;
+    @FXML private TextArea txtReceipt;
+
+    @FXML private Label lblTotalRevenue;
+
+    // ---------- CATEGORII &amp; TIPURI ----------
+    @FXML private TableView&lt;CategorieBautura&gt; categorieTable;
+    @FXML private TableColumn&lt;CategorieBautura, Integer&gt; colCategorieId;
+    @FXML private TableColumn&lt;CategorieBautura, String&gt; colCategorieName;
+    @FXML private TextField txtCategorieName;
+
+    @FXML private TableView&lt;TipBautura&gt; tipTable;
+    @FXML private TableColumn&lt;TipBautura, Integer&gt; colTipId;
+    @FXML private TableColumn&lt;TipBautura, String&gt; colTipName;
+    @FXML private TextField txtTipName;
+
+<span class="nc" id="L62">    private ObservableList&lt;Product&gt; productList = FXCollections.observableArrayList();</span>
+<span class="nc" id="L63">    private ObservableList&lt;Reteta&gt; retetaList = FXCollections.observableArrayList();</span>
+<span class="nc" id="L64">    private ObservableList&lt;IngredientReteta&gt; newRetetaList = FXCollections.observableArrayList();</span>
+<span class="nc" id="L65">    private ObservableList&lt;OrderItem&gt; currentOrderItems = FXCollections.observableArrayList();</span>
+<span class="nc" id="L66">    private ObservableList&lt;CategorieBautura&gt; categorieList = FXCollections.observableArrayList();</span>
+<span class="nc" id="L67">    private ObservableList&lt;TipBautura&gt; tipList = FXCollections.observableArrayList();</span>
+
+<span class="nc" id="L69">    private Order currentOrder = new Order(1);</span>
+
+    public void setService(DrinkShopService service) {
+<span class="nc" id="L72">        this.service = service;</span>
+<span class="nc" id="L73">        initData();</span>
+<span class="nc" id="L74">    }</span>
+
+    @FXML
+    private void initialize() {
+
+        // PRODUCTS
+<span class="nc" id="L80">        colProdId.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;id&quot;));</span>
+<span class="nc" id="L81">        colProdName.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;nume&quot;));</span>
+<span class="nc" id="L82">        colProdPrice.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;pret&quot;));</span>
+<span class="nc" id="L83">        colProdCategorie.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;categorie&quot;));</span>
+<span class="nc" id="L84">        colProdTip.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;tip&quot;));</span>
+<span class="nc" id="L85">        productTable.setItems(productList);</span>
+
+        // RETETE
+<span class="nc" id="L88">        colRetetaId.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;id&quot;));</span>
+<span class="nc" id="L89">        colRetetaDesc.setCellValueFactory(data -&gt; {</span>
+<span class="nc" id="L90">            Reteta r = data.getValue();</span>
+<span class="nc" id="L91">            String desc = r.getIngrediente().stream()</span>
+<span class="nc" id="L92">                    .map(i -&gt; i.getIngredient().getNume() + &quot; (&quot; + i.getCantitate() + &quot;)&quot;)</span>
+<span class="nc" id="L93">                    .collect(Collectors.joining(&quot;, &quot;));</span>
+<span class="nc" id="L94">            return new SimpleStringProperty(desc);</span>
+        });
+<span class="nc" id="L96">        retetaTable.setItems(retetaList);</span>
+
+<span class="nc" id="L98">        colNewIngredName.setCellValueFactory(data -&gt; new SimpleStringProperty(data.getValue().getIngredient().getNume()));</span>
+<span class="nc" id="L99">        colNewIngredCant.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;cantitate&quot;));</span>
+<span class="nc" id="L100">        newRetetaTable.setItems(newRetetaList);</span>
+
+        // CURRENT ORDER TABLE
+<span class="nc" id="L103">        colOrderProdName.setCellValueFactory(data -&gt; {</span>
+<span class="nc" id="L104">            int prodId = data.getValue().getProduct().getId();</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">            Product p = productList.stream().filter(pr -&gt; pr.getId() == prodId).findFirst().orElse(null);</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">            return new SimpleStringProperty(p != null ? p.getNume() : &quot;N/A&quot;);</span>
+        });
+<span class="nc" id="L108">        colOrderQty.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;quantity&quot;));</span>
+<span class="nc" id="L109">        currentOrderTable.setItems(currentOrderItems);</span>
+
+<span class="nc" id="L111">        comboQty.setItems(FXCollections.observableArrayList(1,2,3,4,5,6,7,8,9,10));</span>
+
+        // CATEGORII
+<span class="nc" id="L114">        colCategorieId.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;id&quot;));</span>
+<span class="nc" id="L115">        colCategorieName.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;nume&quot;));</span>
+<span class="nc" id="L116">        categorieTable.setItems(categorieList);</span>
+
+        // TIPURI
+<span class="nc" id="L119">        colTipId.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;id&quot;));</span>
+<span class="nc" id="L120">        colTipName.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;nume&quot;));</span>
+<span class="nc" id="L121">        tipTable.setItems(tipList);</span>
+<span class="nc" id="L122">    }</span>
+
+    private void initData() {
+<span class="nc" id="L125">        productList.setAll(service.getAllProducts());</span>
+<span class="nc" id="L126">        retetaList.setAll(service.getAllRetete());</span>
+<span class="nc" id="L127">        categorieList.setAll(service.getAllCategorii());</span>
+<span class="nc" id="L128">        tipList.setAll(service.getAllTipuri());</span>
+<span class="nc" id="L129">        comboProdCategorie.getItems().setAll(categorieList);</span>
+<span class="nc" id="L130">        comboProdTip.getItems().setAll(tipList);</span>
+<span class="nc" id="L131">        lblTotalRevenue.setText(&quot;Daily Revenue: &quot; + service.getDailyRevenue());</span>
+<span class="nc" id="L132">        updateOrderTotal();</span>
+<span class="nc" id="L133">    }</span>
+
+    // ---------- PRODUCT ----------
+    @FXML
+    private void onAddProduct() {
+<span class="nc" id="L138">        Reteta r=retetaTable.getSelectionModel().getSelectedItem();</span>
+
+<span class="nc bnc" id="L140" title="All 2 branches missed.">        if (r == null) {</span>
+<span class="nc" id="L141">            Alert alert = new Alert(Alert.AlertType.INFORMATION);</span>
+<span class="nc" id="L142">            alert.setTitle(&quot;Error&quot;);</span>
+<span class="nc" id="L143">            alert.setHeaderText(&quot;Selectati o reteta pentru care adugati un produs&quot;);</span>
+<span class="nc" id="L144">            alert.showAndWait();</span>
+<span class="nc" id="L145">            return;</span>
+        }else
+<span class="nc bnc" id="L147" title="All 4 branches missed.">        if (service.getAllProducts().stream().filter(p-&gt;p.getId()==r.getId()).toList().size()&gt;0) {</span>
+<span class="nc" id="L148">            Alert alert = new Alert(Alert.AlertType.WARNING);</span>
+<span class="nc" id="L149">            alert.setTitle(&quot;Error&quot;);</span>
+<span class="nc" id="L150">            alert.setHeaderText(&quot;Exista un produs cu reteta adaugata.&quot;);</span>
+<span class="nc" id="L151">            alert.showAndWait();</span>
+<span class="nc" id="L152">            return;</span>
+        }
+<span class="nc" id="L154">        Product p = new Product(r.getId(),</span>
+<span class="nc" id="L155">                txtProdName.getText(),</span>
+<span class="nc" id="L156">                Double.parseDouble(txtProdPrice.getText()),</span>
+<span class="nc" id="L157">                comboProdCategorie.getValue(),</span>
+<span class="nc" id="L158">                comboProdTip.getValue());</span>
+<span class="nc" id="L159">        service.addProduct(p);</span>
+<span class="nc" id="L160">        initData();</span>
+<span class="nc" id="L161">    }</span>
+
+    @FXML
+    private void onUpdateProduct() {
+<span class="nc" id="L165">        Product selected = productTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">        if (selected == null) return;</span>
+<span class="nc" id="L167">        service.updateProduct(selected.getId(), txtProdName.getText(),</span>
+<span class="nc" id="L168">                Double.parseDouble(txtProdPrice.getText()),</span>
+<span class="nc" id="L169">                comboProdCategorie.getValue(), comboProdTip.getValue());</span>
+<span class="nc" id="L170">        initData();</span>
+<span class="nc" id="L171">    }</span>
+
+    @FXML
+    private void onDeleteProduct() {
+<span class="nc" id="L175">        Product selected = productTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">        if (selected == null) return;</span>
+<span class="nc" id="L177">        service.deleteProduct(selected.getId());</span>
+<span class="nc" id="L178">        initData();</span>
+<span class="nc" id="L179">    }</span>
+
+    @FXML
+    private void onFilterCategorie() {
+<span class="nc" id="L183">        productList.setAll(service.filtreazaDupaCategorie(comboProdCategorie.getValue()));</span>
+<span class="nc" id="L184">    }</span>
+
+    @FXML
+    private void onFilterTip() {
+<span class="nc" id="L188">        productList.setAll(service.filtreazaDupaTip(comboProdTip.getValue()));</span>
+<span class="nc" id="L189">    }</span>
+
+    // ---------- RETETA NOUA ----------
+    @FXML
+    private void onAddNewIngred() {
+<span class="nc" id="L194">        newRetetaList.add(new IngredientReteta(new drinkshop.domain.Ingredient((long) (Math.random() * 10000), txtNewIngredName.getText(), &quot;buc&quot;),</span>
+<span class="nc" id="L195">                Double.parseDouble(txtNewIngredCant.getText())));</span>
+<span class="nc" id="L196">    }</span>
+
+    @FXML
+    private void onDeleteNewIngred() {
+<span class="nc" id="L200">        IngredientReteta sel = newRetetaTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L201" title="All 2 branches missed.">        if (sel != null) newRetetaList.remove(sel);</span>
+<span class="nc" id="L202">    }</span>
+
+    @FXML
+    private void onAddNewReteta() {
+<span class="nc" id="L206">        Reteta r = new Reteta(service.getAllRetete().size()+1, new ArrayList&lt;&gt;(newRetetaList));</span>
+<span class="nc" id="L207">        service.addReteta(r);</span>
+<span class="nc" id="L208">        newRetetaList.clear();</span>
+<span class="nc" id="L209">        initData();</span>
+<span class="nc" id="L210">    }</span>
+
+    @FXML
+    private void onClearNewRetetaIngredients() {
+<span class="nc" id="L214">        newRetetaTable.getItems().clear();</span>
+<span class="nc" id="L215">        txtNewIngredName.clear();</span>
+<span class="nc" id="L216">        txtNewIngredCant.clear();</span>
+<span class="nc" id="L217">    }</span>
+
+    // ---------- CURRENT ORDER ----------
+    @FXML
+    private void onAddOrderItem() {
+<span class="nc" id="L222">        Product selected = productTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc" id="L223">        Integer qty = comboQty.getValue();</span>
+
+<span class="nc bnc" id="L225" title="All 2 branches missed.">        if (selected == null) {</span>
+<span class="nc" id="L226">            showError(&quot;Selectează un produs din listă.&quot;);</span>
+<span class="nc" id="L227">            return;</span>
+        }
+<span class="nc bnc" id="L229" title="All 2 branches missed.">        if (qty == null) {</span>
+<span class="nc" id="L230">            showError(&quot;Selectează cantitatea.&quot;);</span>
+<span class="nc" id="L231">            return;</span>
+        }
+
+<span class="nc" id="L234">        currentOrderItems.add(new OrderItem(selected, qty));</span>
+<span class="nc" id="L235">        updateOrderTotal();</span>
+<span class="nc" id="L236">    }</span>
+
+    @FXML
+    private void onDeleteOrderItem() {
+<span class="nc" id="L240">        OrderItem sel = currentOrderTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L241" title="All 2 branches missed.">        if (sel != null) {</span>
+<span class="nc" id="L242">            currentOrderItems.remove(sel);</span>
+<span class="nc" id="L243">            updateOrderTotal();</span>
+        }
+<span class="nc" id="L245">    }</span>
+
+    @FXML
+    private void onFinalizeOrder() {
+<span class="nc" id="L249">        currentOrder.getItems().clear();</span>
+<span class="nc" id="L250">        currentOrder.getItems().addAll(currentOrderItems);</span>
+<span class="nc" id="L251">        currentOrder.computeTotalPrice();</span>
+
+<span class="nc" id="L253">        service.addOrder(currentOrder);</span>
+<span class="nc" id="L254">        txtReceipt.setText(service.generateReceipt(currentOrder));</span>
+
+<span class="nc" id="L256">        currentOrderItems.clear();</span>
+<span class="nc" id="L257">        currentOrder = new Order(currentOrder.getId() + 1);</span>
+<span class="nc" id="L258">        updateOrderTotal();</span>
+<span class="nc" id="L259">    }</span>
+
+    private void updateOrderTotal() {
+<span class="nc" id="L262">        currentOrder.getItems().clear();</span>
+<span class="nc" id="L263">        currentOrder.getItems().addAll(currentOrderItems);</span>
+<span class="nc" id="L264">        double total = service.computeTotal(currentOrder);</span>
+<span class="nc" id="L265">        lblOrderTotal.setText(&quot;Total: &quot; + total);</span>
+<span class="nc" id="L266">    }</span>
+
+    // ---------- EXPORT + REVENUE ----------
+    @FXML
+    private void onExportOrdersCsv() {
+<span class="nc" id="L271">        service.exportCsv(&quot;orders.csv&quot;);</span>
+<span class="nc" id="L272">    }</span>
+
+    @FXML
+    private void onDailyRevenue() {
+<span class="nc" id="L276">        lblTotalRevenue.setText(&quot;Daily Revenue: &quot; + service.getDailyRevenue());</span>
+<span class="nc" id="L277">    }</span>
+
+    // ---------- CATEGORII ----------
+    @FXML
+    private void onAddCategorie() {
+<span class="nc bnc" id="L282" title="All 2 branches missed.">        if (txtCategorieName.getText().isEmpty()) return;</span>
+<span class="nc" id="L283">        int nextId = categorieList.stream().mapToInt(CategorieBautura::getId).max().orElse(0) + 1;</span>
+<span class="nc" id="L284">        CategorieBautura cat = new CategorieBautura(nextId, txtCategorieName.getText());</span>
+<span class="nc" id="L285">        service.addCategorie(cat);</span>
+<span class="nc" id="L286">        initData();</span>
+<span class="nc" id="L287">        txtCategorieName.clear();</span>
+<span class="nc" id="L288">    }</span>
+
+    @FXML
+    private void onUpdateCategorie() {
+<span class="nc" id="L292">        CategorieBautura sel = categorieTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L293" title="All 4 branches missed.">        if (sel == null || txtCategorieName.getText().isEmpty()) return;</span>
+<span class="nc" id="L294">        sel.setNume(txtCategorieName.getText());</span>
+<span class="nc" id="L295">        service.updateCategorie(sel);</span>
+<span class="nc" id="L296">        initData();</span>
+<span class="nc" id="L297">        txtCategorieName.clear();</span>
+<span class="nc" id="L298">    }</span>
+
+    @FXML
+    private void onDeleteCategorie() {
+<span class="nc" id="L302">        CategorieBautura sel = categorieTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L303" title="All 2 branches missed.">        if (sel == null) return;</span>
+<span class="nc" id="L304">        service.deleteCategorie(sel.getId());</span>
+<span class="nc" id="L305">        initData();</span>
+<span class="nc" id="L306">    }</span>
+
+    // ---------- TIPURI BAUTURA ----------
+    @FXML
+    private void onAddTip() {
+<span class="nc bnc" id="L311" title="All 2 branches missed.">        if (txtTipName.getText().isEmpty()) return;</span>
+<span class="nc" id="L312">        int nextId = tipList.stream().mapToInt(TipBautura::getId).max().orElse(0) + 1;</span>
+<span class="nc" id="L313">        TipBautura tip = new TipBautura(nextId, txtTipName.getText());</span>
+<span class="nc" id="L314">        service.addTip(tip);</span>
+<span class="nc" id="L315">        initData();</span>
+<span class="nc" id="L316">        txtTipName.clear();</span>
+<span class="nc" id="L317">    }</span>
+
+    @FXML
+    private void onUpdateTip() {
+<span class="nc" id="L321">        TipBautura sel = tipTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L322" title="All 4 branches missed.">        if (sel == null || txtTipName.getText().isEmpty()) return;</span>
+<span class="nc" id="L323">        sel.setNume(txtTipName.getText());</span>
+<span class="nc" id="L324">        service.updateTip(sel);</span>
+<span class="nc" id="L325">        initData();</span>
+<span class="nc" id="L326">        txtTipName.clear();</span>
+<span class="nc" id="L327">    }</span>
+
+    @FXML
+    private void onDeleteTip() {
+<span class="nc" id="L331">        TipBautura sel = tipTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L332" title="All 2 branches missed.">        if (sel == null) return;</span>
+<span class="nc" id="L333">        service.deleteTip(sel.getId());</span>
+<span class="nc" id="L334">        initData();</span>
+<span class="nc" id="L335">    }</span>
+
+    private void showError(String msg) {
+<span class="nc" id="L338">        Alert alert = new Alert(Alert.AlertType.ERROR, msg, ButtonType.OK);</span>
+<span class="nc" id="L339">        alert.showAndWait();</span>
+<span class="nc" id="L340">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

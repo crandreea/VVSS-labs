@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DrinkShopApp.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MyDrinkShop</a> &gt; <a href="index.source.html" class="el_package">drinkshop.ui</a> &gt; <span class="el_source">DrinkShopApp.java</span></div><h1>DrinkShopApp.java</h1><pre class="source lang-java linenums">package drinkshop.ui;
+
+import drinkshop.domain.*;
+import drinkshop.repository.Repository;
+import drinkshop.repository.file.FileCategorieRepository;
+import drinkshop.repository.file.FileOrderRepository;
+import drinkshop.repository.file.FileProductRepository;
+import drinkshop.repository.file.FileRetetaRepository;
+import drinkshop.repository.file.FileStocRepository;
+import drinkshop.repository.file.FileTipBauturaRepository;
+import drinkshop.service.DrinkShopService;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+<span class="nc" id="L17">public class DrinkShopApp extends Application {</span>
+
+    @Override
+    public void start(Stage stage) throws Exception {
+
+        // ---------- Initializare Repository-uri Dictionar ----------
+<span class="nc" id="L23">        Repository&lt;Integer, CategorieBautura&gt; catRepo = new FileCategorieRepository(&quot;data/categorii.txt&quot;);</span>
+<span class="nc" id="L24">        Repository&lt;Integer, TipBautura&gt; tipRepo = new FileTipBauturaRepository(&quot;data/tipuri.txt&quot;);</span>
+<span class="nc" id="L25">        Repository&lt;Long, Ingredient&gt; ingredientRepo = new drinkshop.repository.file.FileIngredientRepository(&quot;data/ingredients.txt&quot;);</span>
+
+        // ---------- Initializare Repository-uri Dependente ----------
+<span class="nc" id="L28">        Repository&lt;Integer, Product&gt; productRepo = new FileProductRepository(&quot;data/products.txt&quot;, catRepo, tipRepo);</span>
+<span class="nc" id="L29">        Repository&lt;Integer, Order&gt; orderRepo = new FileOrderRepository(&quot;data/orders.txt&quot;, productRepo);</span>
+<span class="nc" id="L30">        Repository&lt;Integer, Reteta&gt; retetaRepo = new FileRetetaRepository(&quot;data/retete.txt&quot;, ingredientRepo);</span>
+<span class="nc" id="L31">        Repository&lt;Integer, Stoc&gt; stocRepo = new FileStocRepository(&quot;data/stocuri.txt&quot;, ingredientRepo);</span>
+
+        // ---------- Initializare Service ----------
+<span class="nc" id="L34">        DrinkShopService service = new DrinkShopService(productRepo, orderRepo, retetaRepo, stocRepo, catRepo, tipRepo);</span>
+
+        // ---------- Incarcare FXML ----------
+
+<span class="nc" id="L38">        FXMLLoader loader = new FXMLLoader(getClass().getResource(&quot;drinkshop.fxml&quot;));</span>
+<span class="nc" id="L39">        Scene scene = new Scene(loader.load());</span>
+
+        // ---------- Setare Service in Controller ----------
+<span class="nc" id="L42">        DrinkShopController controller = loader.getController();</span>
+<span class="nc" id="L43">        controller.setService(service);</span>
+
+        // ---------- Afisare Fereastra ----------
+<span class="nc" id="L46">        stage.setTitle(&quot;Coffee Shop Management&quot;);</span>
+<span class="nc" id="L47">        stage.setScene(scene);</span>
+<span class="nc" id="L48">        stage.show();</span>
+<span class="nc" id="L49">    }</span>
+
+    public static void main(String[] args) {
+<span class="nc" id="L52">        launch(args);</span>
+<span class="nc" id="L53">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

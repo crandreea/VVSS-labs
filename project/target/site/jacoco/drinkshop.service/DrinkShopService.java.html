@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DrinkShopService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MyDrinkShop</a> &gt; <a href="index.source.html" class="el_package">drinkshop.service</a> &gt; <span class="el_source">DrinkShopService.java</span></div><h1>DrinkShopService.java</h1><pre class="source lang-java linenums">package drinkshop.service;
+
+import drinkshop.domain.*;
+import drinkshop.export.CsvExporter;
+import drinkshop.receipt.ReceiptGenerator;
+import drinkshop.reports.DailyReportService;
+import drinkshop.repository.Repository;
+
+import java.util.List;
+
+public class DrinkShopService {
+
+    private final ProductService productService;
+    private final OrderService orderService;
+    private final RetetaService retetaService;
+    private final StocService stocService;
+    private final DailyReportService report;
+
+    private final Repository&lt;Integer, CategorieBautura&gt; categorieRepo;
+    private final Repository&lt;Integer, TipBautura&gt; tipRepo;
+
+    public DrinkShopService(
+            Repository&lt;Integer, Product&gt; productRepo,
+            Repository&lt;Integer, Order&gt; orderRepo,
+            Repository&lt;Integer, Reteta&gt; retetaRepo,
+            Repository&lt;Integer, Stoc&gt; stocService,
+            Repository&lt;Integer, CategorieBautura&gt; categorieRepo,
+            Repository&lt;Integer, TipBautura&gt; tipRepo
+<span class="nc" id="L29">    ) {</span>
+<span class="nc" id="L30">        this.productService = new ProductService(productRepo);</span>
+<span class="nc" id="L31">        this.orderService = new OrderService(orderRepo, productRepo);</span>
+<span class="nc" id="L32">        this.retetaService = new RetetaService(retetaRepo);</span>
+<span class="nc" id="L33">        this.stocService = new StocService(stocService);</span>
+<span class="nc" id="L34">        this.report = new DailyReportService(orderRepo);</span>
+<span class="nc" id="L35">        this.categorieRepo = categorieRepo;</span>
+<span class="nc" id="L36">        this.tipRepo = tipRepo;</span>
+<span class="nc" id="L37">    }</span>
+
+    // ---------- PRODUCT ----------
+    public void addProduct(Product p) {
+<span class="nc" id="L41">        productService.addProduct(p);</span>
+<span class="nc" id="L42">    }</span>
+
+    public void updateProduct(int id, String name, double price, CategorieBautura categorie, TipBautura tip) {
+<span class="nc" id="L45">        productService.updateProduct(id, name, price, categorie, tip);</span>
+<span class="nc" id="L46">    }</span>
+
+    public void deleteProduct(int id) {
+<span class="nc" id="L49">        productService.deleteProduct(id);</span>
+<span class="nc" id="L50">    }</span>
+
+    public List&lt;Product&gt; getAllProducts() {
+<span class="nc" id="L53">        return productService.getAllProducts();</span>
+    }
+
+    public List&lt;Product&gt; filtreazaDupaCategorie(CategorieBautura categorie) {
+<span class="nc" id="L57">        return productService.filterByCategorie(categorie);</span>
+    }
+
+    public List&lt;Product&gt; filtreazaDupaTip(TipBautura tip) {
+<span class="nc" id="L61">        return productService.filterByTip(tip);</span>
+    }
+
+    // ---------- ORDER ----------
+    public void addOrder(Order o) {
+<span class="nc" id="L66">        orderService.addOrder(o);</span>
+<span class="nc" id="L67">    }</span>
+
+    public List&lt;Order&gt; getAllOrders() {
+<span class="nc" id="L70">        return orderService.getAllOrders();</span>
+    }
+
+    public double computeTotal(Order o) {
+<span class="nc" id="L74">        return orderService.computeTotal(o);</span>
+    }
+
+    public String generateReceipt(Order o) {
+<span class="nc" id="L78">        return ReceiptGenerator.generate(o, productService.getAllProducts());</span>
+    }
+
+    public double getDailyRevenue() {
+<span class="nc" id="L82">        return report.getTotalRevenue();</span>
+    }
+
+    public void exportCsv(String path) {
+<span class="nc" id="L86">        CsvExporter.exportOrders(productService.getAllProducts(), orderService.getAllOrders(), path);</span>
+<span class="nc" id="L87">    }</span>
+
+    // ---------- STOCK + RECIPE ----------
+    public void comandaProdus(Product produs) {
+<span class="nc" id="L91">        Reteta reteta = retetaService.findById(produs.getId());</span>
+
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (!stocService.areSuficient(reteta)) {</span>
+<span class="nc" id="L94">            throw new IllegalStateException(&quot;Stoc insuficient pentru produsul: &quot; + produs.getNume());</span>
+        }
+<span class="nc" id="L96">        stocService.consuma(reteta);</span>
+<span class="nc" id="L97">    }</span>
+
+    public List&lt;Reteta&gt; getAllRetete() {
+<span class="nc" id="L100">        return retetaService.getAll();</span>
+    }
+
+    public void addReteta(Reteta r) {
+<span class="nc" id="L104">        retetaService.addReteta(r);</span>
+<span class="nc" id="L105">    }</span>
+
+    public void updateReteta(Reteta r) {
+<span class="nc" id="L108">        retetaService.updateReteta(r);</span>
+<span class="nc" id="L109">    }</span>
+
+    public void deleteReteta(int id) {
+<span class="nc" id="L112">        retetaService.deleteReteta(id);</span>
+<span class="nc" id="L113">    }</span>
+
+    // ---------- CATEGORIE ----------
+    public List&lt;CategorieBautura&gt; getAllCategorii() {
+<span class="nc" id="L117">        return categorieRepo.findAll();</span>
+    }
+
+    public void addCategorie(CategorieBautura cb) {
+<span class="nc" id="L121">        categorieRepo.save(cb);</span>
+<span class="nc" id="L122">    }</span>
+
+    public void updateCategorie(CategorieBautura cb) {
+<span class="nc" id="L125">        categorieRepo.update(cb);</span>
+<span class="nc" id="L126">    }</span>
+
+    public void deleteCategorie(int id) {
+<span class="nc" id="L129">        categorieRepo.delete(id);</span>
+<span class="nc" id="L130">    }</span>
+
+    // ---------- TIP ----------
+    public List&lt;TipBautura&gt; getAllTipuri() {
+<span class="nc" id="L134">        return tipRepo.findAll();</span>
+    }
+
+    public void addTip(TipBautura tb) {
+<span class="nc" id="L138">        tipRepo.save(tb);</span>
+<span class="nc" id="L139">    }</span>
+
+    public void updateTip(TipBautura tb) {
+<span class="nc" id="L142">        tipRepo.update(tb);</span>
+<span class="nc" id="L143">    }</span>
+
+    public void deleteTip(int id) {
+<span class="nc" id="L146">        tipRepo.delete(id);</span>
+<span class="nc" id="L147">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
