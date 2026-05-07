@@ -1,0 +1,33 @@
+pipeline {
+    agent any
+    
+    environment {
+        MAVEN_OPTS = "--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.base/java.text=ALL-UNNAMED --add-opens java.desktop/java.awt.font=ALL-UNNAMED"
+    }
+    
+    stages {
+        stage('Initialize') {
+            steps {
+                dir('/Users/croitoruandreea/Desktop/vvss/LabWebFTP') {
+                    echo "Starting tests in folder: ${pwd()}"
+                }
+            }
+        }
+        
+        stage('Build & Test') {
+            steps {
+                dir('/Users/croitoruandreea/Desktop/vvss/LabWebFTP') {
+                    sh './apache-maven-3.8.8/bin/mvn clean verify'
+                }
+            }
+        }
+        
+        stage('Serenity Report Generation') {
+            steps {
+                dir('/Users/croitoruandreea/Desktop/vvss/LabWebFTP') {
+                    sh './apache-maven-3.8.8/bin/mvn serenity:aggregate'
+                }
+            }
+        }
+    }
+}
