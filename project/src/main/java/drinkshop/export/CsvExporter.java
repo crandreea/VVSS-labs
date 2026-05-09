@@ -6,6 +6,7 @@ import java.io.UncheckedIOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import drinkshop.domain.Order;
 import drinkshop.domain.OrderItem;
@@ -18,7 +19,7 @@ public class CsvExporter {
             double sum=0.0;
             for (Order o : orders){
                 for (OrderItem i : o.getItems()) {
-                    Product p = products.stream().filter((p1)->i.getProduct().getId()==p1.getId()).toList().get(0);
+                    Product p = products.stream().filter((p1)->i.getProduct().getId()==p1.getId()).collect(Collectors.toList()).get(0);
                     w.write(o.getId() + "," + p.getNume() + "," + i.getQuantity() + "," + p.getPret() + "\n");
                 }
                 w.write("total order: "+o.getTotalPrice()+" RON\n");
